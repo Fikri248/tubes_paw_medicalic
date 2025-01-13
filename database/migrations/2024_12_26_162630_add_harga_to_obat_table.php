@@ -9,24 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('obats', function (Blueprint $table) {
-            $table->id();
-            // Tambahkan nullable atau default value
-            $table->decimal('harga', 15, 2)->nullable(); // Bisa bernilai null
-            // ATAU
-            $table->decimal('harga', 15, 2)->default(0); // Default 0
+        Schema::table('obat', function (Blueprint $table) {
+            $table->decimal('harga', 10, 2)->after('stok');  // Menambahkan kolom harga setelah kolom stok
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::table('obat', function (Blueprint $table) {
-            $table->dropColumn('harga');
+            $table->dropColumn('harga');  // Menghapus kolom harga jika migrasi di-rollback
         });
     }
 };

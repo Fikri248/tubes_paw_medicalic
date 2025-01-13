@@ -16,7 +16,11 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            Category::create($category);
+            // Periksa apakah kategori sudah ada
+            Category::firstOrCreate(
+                ['name' => $category['name']], // Kondisi unik
+                ['created_at' => now(), 'updated_at' => now()] // Data default
+            );
         }
     }
 }
