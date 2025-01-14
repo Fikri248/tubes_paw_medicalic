@@ -2,8 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExportPdfObatController;
+use App\Http\Controllers\ExportPdfTransaksiController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ObatController;
+use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\LaporanController;
 
 /*
 |--------------------------------------------------------------------------
