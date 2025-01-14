@@ -1,0 +1,88 @@
+.sidebar {
+    background: #fff;
+    min-height: 100vh;
+    border-right: 1px solid #eee;
+}
+
+.nav-link {
+    color: #333;
+}
+
+.nav-link:hover,
+.sub-active {
+    background: rgba(13, 110, 253, 0.1);
+}
+
+.dropdown-menu {
+    border: none;
+    margin-left: 2rem;
+    background: transparent;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    color: #333;
+}
+
+.dropdown-item:hover {
+    background: #f8f9fa;
+}
+
+.dropdown-container {
+    position: relative;
+}
+
+.dropdown-container .dropdown-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-container .fa-chevron-down {
+    transition: transform 0.3s ease;
+}
+
+.submenu {
+    list-style: none;
+    padding-left: 2rem;
+    display: none;
+}
+
+.submenu li a {
+    color: #333;
+    text-decoration: none;
+}
+
+.submenu.show {
+    display: block;
+}
+
+.stats-card {
+    border-radius: 8px;
+    padding: 1rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.blue-card {
+    background: #007bff;
+    /* Warna biru */
+}
+
+.green-card {
+    background: #28a745;
+    /* Warna hijau */
+}
+
+.orange-card {
+    background: #ffc107;
+    /* Warna oranye */
+}
+
+.purple-card {
+    background: #6f42c1;
+    /* Warna ungu */
+}
