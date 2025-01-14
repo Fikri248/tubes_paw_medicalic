@@ -38,7 +38,7 @@ Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('t
 Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
 Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
 
-Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
 Route::get('/laporan/obat/pdf', [LaporanController::class, 'cetakObatPdf'])->name('laporan.obat.pdf');
 Route::get('/laporan/transaksi/pdf', [LaporanController::class, 'cetakTransaksiPdf'])->name('laporan.transaksi.pdf');
 Route::get('/laporan/obat/excel', [LaporanController::class, 'cetakObatExcel'])->name('laporan.obat.excel');
