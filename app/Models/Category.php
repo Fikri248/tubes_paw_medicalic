@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/Category.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +9,11 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $table = 'categories'; // Nama tabel
-    protected $fillable = ['name']; // Kolom yang bisa diisi
-}
+    protected $table = 'categories';
+    protected $fillable = ['name'];
 
+    public function obat()
+    {
+        return $this->hasMany(Obat::class, 'category_id', 'id'); // Kolom foreign key adalah 'category_id'
+    }
+}

@@ -9,19 +9,25 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Menghitung total obat yang masuk
-        $totalObatMasuk = Obat::sum('stok');
+        // Menghitung total obat tersedia (stok sisa dari semua obat)
+        $totalObatTersedia = Obat::sum('stok_sisa'); // Menjumlahkan stok sisa dari semua obat
 
-        // Menghitung total obat yang terjual
-        // $totalObatTerjual = Transaksi::sum('jumlah_terjual'); // Ganti dengan kolom yang sesuai jika ada
+        // Menghitung total obat yang terjual (dari tabel Transaksi)
+        $totalObatTerjual = Transaksi::sum('jumlah'); // Kolom 'jumlah' menyimpan jumlah obat yang dibeli/terjual
 
-        // Menghitung total jumlah obat
-        $totalSemuaObat = Obat::count(); // Menghitung jumlah total obat di tabel
+        // Menghitung total jenis obat yang ada
+        $totalSemuaObat = Obat::count(); // Menghitung total jenis obat (jumlah baris di tabel Obat)
 
-        // Menghitung total pendapatan
-        // $totalPendapatan = Transaksi::sum('total_harga'); // Ganti dengan kolom yang sesuai
+        // Menghitung subtotal pendapatan (tanpa PPN)
+        $subtotalPendapatan = Transaksi::sum('total_harga');
+
+        // Menghitung total PPN (12% dari subtotal)
+        $ppn = $subtotalPendapatan * 0.12;
+
+        // Menghitung total pendapatan (subtotal + PPN)
+        $totalPendapatan = $subtotalPendapatan + $ppn;
 
         // Mengirim data ke view dashboard
-        return view('dashboard', compact('totalObatMasuk', 'totalSemuaObat'));
+        return view('dashboard', compact('totalObatTersedia', 'totalObatTerjual', 'totalSemuaObat', 'totalPendapatan'));
     }
 }
