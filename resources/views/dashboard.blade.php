@@ -6,10 +6,10 @@
     <div class="row mb-4">
         <div class="col-md-3">
             <div class="stats-card blue-card">
-                <h6>Total Obat Tersedia</h6> <!-- Mengganti judul -->
+                <h6>Total Obat Tersedia</h6>
                 <div class="d-flex justify-content-between align-items-center">
                     <i class="fas fa-download fa-2x"></i>
-                    <h3>{{ $totalObatTersedia ?? 0 }}</h3> <!-- Menampilkan total stok sisa -->
+                    <h3>{{ $totalObatTersedia ?? 0 }}</h3>
                 </div>
             </div>
         </div>
@@ -18,7 +18,7 @@
                 <h6>Total Obat Terjual</h6>
                 <div class="d-flex justify-content-between align-items-center">
                     <i class="fas fa-upload fa-2x"></i>
-                    <h3>{{ $totalObatTerjual ?? 0 }}</h3> <!-- Menampilkan jumlah obat terjual -->
+                    <h3>{{ $totalObatTerjual ?? 0 }}</h3>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                 <h6>Total Semua Obat</h6>
                 <div class="d-flex justify-content-between align-items-center">
                     <i class="fas fa-box fa-2x"></i>
-                    <h3>{{ $totalSemuaObat ?? 0 }}</h3> <!-- Menampilkan total jenis obat -->
+                    <h3>{{ $totalSemuaObat ?? 0 }}</h3>
                 </div>
             </div>
         </div>
@@ -36,8 +36,7 @@
                 <h6>Total Pendapatan + PPN</h6>
                 <div class="d-flex justify-content-between align-items-center">
                     <i class="fas fa-money-bill fa-2x"></i>
-                    <h3>Rp {{ number_format($totalPendapatan ?? 0, 0, ',', '.') }}</h3>
-                    <!-- Menampilkan total pendapatan -->
+                    <h3 style="font-size: 24px;">Rp {{ number_format($totalPendapatan ?? 0, 0, ',', '.') }}</h3>
                 </div>
             </div>
         </div>

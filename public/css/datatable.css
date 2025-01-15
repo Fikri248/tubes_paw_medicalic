@@ -1,0 +1,13 @@
+#categoriesTable_wrapper > div:last-child {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#categoriesTable_paginate ul li a {
+    font-size: 14px;
+}
+
+.dataTables_empty {
+    text-align: center;
+}

@@ -10,14 +10,13 @@ class KategoriController extends Controller
 {
     public function getData()
     {
-        // Pastikan dengan withCount
         $categories = Category::withCount('obat')->get();
 
         return datatables()
             ->collection($categories)
             ->addIndexColumn()
             ->addColumn('jumlah_obat', function ($category) {
-                return $category->obat_count; // Mengambil nilai dari withCount
+                return $category->obat_count;
             })
             ->addColumn('actions', function ($category) {
                 return '
@@ -49,7 +48,19 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:categories,name|max:255',
+            'name' => [
+                'required',
+                'string',
+                'regex:/^[a-zA-Z\s]+$/',
+                'unique:categories,name',
+                'max:255'
+            ]
+        ], [
+            'name.required' => 'Kategori wajib diisi.',
+            'name.string' => 'Kategori harus berupa teks.',
+            'name.regex' => 'Kategori hanya boleh berisi huruf dan spasi.',
+            'name.unique' => 'Kategori sudah ada.',
+            'name.max' => 'Kategori tidak boleh lebih dari 255 karakter.'
         ]);
 
         Category::create([

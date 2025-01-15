@@ -20,10 +20,9 @@ class Obat extends Model
         'deskripsi',
     ];
 
-
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id'); // Kolom foreign key adalah 'category_id'
+        return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
     public function transaksis()
@@ -33,7 +32,7 @@ class Obat extends Model
 
     public function setStokAwalAttribute($value)
     {
-        if (!$this->exists) { // Hanya set stok awal jika data baru
+        if (!$this->exists) { 
             $this->attributes['stok_awal'] = $value;
         }
     }

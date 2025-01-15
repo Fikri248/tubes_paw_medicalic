@@ -14,16 +14,12 @@ class LaporanController extends Controller
 {
     public function index()
     {
-        // 1. Subtotal pendapatan (total_harga dari semua transaksi)
         $subtotalPendapatan = Transaksi::sum('total_harga');
 
-        // 2. Total PPN (12% dari subtotal pendapatan)
-        $ppn = $subtotalPendapatan * 0.12;
+        $totalPPN = 0.12 * $subtotalPendapatan;
 
-        // 3. Total pendapatan bersih (subtotal + total PPN)
         $pendapatanBersih = $subtotalPendapatan;
 
-        // 4. Obat terlaris (obat dengan jumlah pembelian terbanyak)
         $obatTerlaris = Transaksi::with('obat')
             ->selectRaw('obat_id, SUM(jumlah) as total_jumlah')
             ->groupBy('obat_id')
@@ -32,18 +28,15 @@ class LaporanController extends Controller
 
         $obatTerlarisNama = $obatTerlaris->obat->nama ?? 'Tidak ada';
 
-        // 5. Jumlah transaksi (jumlah unik order_id)
         $jumlahTransaksi = Transaksi::distinct('order_id')->count('order_id');
 
-        // Kirim data ke view
         return view('laporan.index', [
             'pendapatanBersih' => $pendapatanBersih,
-            'ppn' => $ppn,
+            'ppn' => $totalPPN,
             'obatTerlaris' => $obatTerlarisNama,
             'jumlahTransaksi' => $jumlahTransaksi,
         ]);
     }
-
 
     public function cetakObatPdf()
     {
@@ -83,10 +76,9 @@ class LaporanController extends Controller
         return $pdf->download('laporan-transaksi.pdf');
     }
 
-
     public function cetakObatExcel()
     {
-        return Excel::download(new ObatExport, 'laporan_daftar_obat.xlsx');
+        return Excel::download(new ObatExport, 'laporan_obat-' . date('d-m-Y') . '.xlsx');
     }
 
     public function cetakTransaksiExcel()
@@ -116,6 +108,6 @@ class LaporanController extends Controller
             ];
         });
 
-        return Excel::download(new TransaksiExport($data), 'laporan-transaksi.xlsx');
+        return Excel::download(new TransaksiExport($data), 'laporan_transaksi-' . date('d-m-Y') . '.xlsx');
     }
 }

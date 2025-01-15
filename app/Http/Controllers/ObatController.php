@@ -21,7 +21,6 @@ class ObatController extends Controller
                 return $obat->category ? $obat->category->name : '-';
             })
             ->addColumn('stok_sisa', function ($obat) {
-                // Langsung gunakan stok_sisa dari database
                 return $obat->stok_sisa;
             })
             ->addColumn('actions', function ($obat) {
@@ -52,14 +51,13 @@ class ObatController extends Controller
 
     public function edit($id)
     {
-        // Ambil data obat termasuk relasi dengan kategori
         $obat = Obat::findOrFail($id);
 
-        // Ambil semua kategori untuk dropdown
         $categories = Category::all();
 
-        // Langsung gunakan stok_sisa dari database tanpa menghitung ulang
         $stokSisa = $obat->stok_sisa;
+
+        $obat->harga = (int) $obat->harga;
 
         return view('master_data.edit_obat', compact('obat', 'categories', 'stokSisa'));
     }
@@ -99,25 +97,53 @@ class ObatController extends Controller
         return redirect()->route('master-data.obat');
     }
 
-
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-zA-Z\s]+$/',
+                'unique:obat,nama',
+            ],
             'category_id' => 'required|exists:categories,id',
             'jenis' => 'required|string|in:krim,salep,sirup,gel,lotion,tablet,sachet,pil,kapsul,kaplet,bubuk,oles,spray,tetes',
             'stok' => 'required|integer|min:0',
             'harga' => 'required|numeric|min:0',
-            'deskripsi' => 'required|string',
+            'deskripsi' => [
+                'required',
+                'string',
+                'regex:/^[a-zA-Z\s]+$/',
+            ],
+        ], [
+            'nama.required' => 'Nama obat harus diisi.',
+            'nama.string' => 'Nama obat harus berupa teks.',
+            'nama.max' => 'Nama obat tidak boleh lebih dari 255 karakter.',
+            'nama.regex' => 'Nama obat hanya boleh mengandung huruf dan spasi.',
+            'nama.unique' => 'Nama obat sudah ada. Harap masukkan nama lain.',
+            'category_id.required' => 'Kategori obat harus dipilih.',
+            'category_id.exists' => 'Kategori obat yang dipilih tidak valid.',
+            'jenis.required' => 'Jenis obat harus diisi.',
+            'jenis.string' => 'Jenis obat harus berupa teks.',
+            'jenis.in' => 'Jenis obat tidak valid.',
+            'stok.required' => 'Stok obat harus diisi.',
+            'stok.integer' => 'Stok obat harus berupa angka.',
+            'stok.min' => 'Stok obat tidak boleh kurang dari 0.',
+            'harga.required' => 'Harga obat harus diisi.',
+            'harga.numeric' => 'Harga obat harus berupa angka.',
+            'harga.min' => 'Harga obat tidak boleh kurang dari 0.',
+            'deskripsi.required' => 'Deskripsi obat harus diisi.',
+            'deskripsi.string' => 'Deskripsi obat harus berupa teks.',
+            'deskripsi.regex' => 'Deskripsi obat hanya boleh mengandung huruf dan spasi.',
         ]);
 
-        // Set stok awal dan stok sisa sama
         Obat::create([
             'nama' => $request->nama,
             'category_id' => $request->category_id,
             'jenis' => $request->jenis,
             'stok_awal' => $request->stok,
-            'stok_sisa' => $request->stok, // Stok sisa sama dengan stok awal
+            'stok_sisa' => $request->stok, 
             'harga' => $request->harga,
             'deskripsi' => $request->deskripsi,
         ]);
