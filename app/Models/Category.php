@@ -14,6 +14,6 @@ class Category extends Model
 
     public function obat()
     {
-        return $this->hasMany(Obat::class, 'category_id', 'id'); // Kolom foreign key adalah 'category_id'
+        return $this->hasMany(Obat::class, 'category_id', 'id'); 
     }
 }

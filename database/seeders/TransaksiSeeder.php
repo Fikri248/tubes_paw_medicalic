@@ -11,40 +11,38 @@ class TransaksiSeeder extends Seeder
 {
     public function run(): void
     {
-        // Buat order baru
         $order = Order::create([
             'total_harga' => 0
         ]);
 
-        $obats = Obat::all();
-        $totalHarga = 0;
+        $obats = Obat::take(3)->get();
+        $subtotal = 0;
 
         foreach ($obats as $index => $obat) {
-            $jumlah = ($index + 1) * 5; // Contoh jumlah
-            $subtotal = $obat->harga * $jumlah;
+            $jumlah = 5;
+            $itemSubtotal = $obat->harga * $jumlah;
 
-            // Validasi stok sisa cukup sebelum membuat transaksi
             if ($obat->stok_sisa >= $jumlah) {
-                // Simpan transaksi untuk obat ini
                 Transaksi::create([
                     'order_id' => $order->id,
                     'obat_id' => $obat->id,
                     'jumlah' => $jumlah,
-                    'total_harga' => $subtotal,
+                    'total_harga' => $itemSubtotal,
                 ]);
 
-                // Kurangi stok sisa obat
                 $obat->stok_sisa -= $jumlah;
-                $obat->save(); // Simpan perubahan stok sisa
+                $obat->save();
 
-                // Tambahkan subtotal ke total harga order
-                $totalHarga += $subtotal;
+                $subtotal += $itemSubtotal;
             } else {
                 echo "Stok obat '{$obat->nama}' tidak cukup untuk transaksi ini.\n";
             }
         }
 
-        // Update total harga di tabel order
+        $ppn = $subtotal * 0.12;
+
+        $totalHarga = $subtotal + $ppn;
+
         $order->update(['total_harga' => $totalHarga]);
     }
 }

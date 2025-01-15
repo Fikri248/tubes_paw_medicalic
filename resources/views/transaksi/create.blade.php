@@ -3,98 +3,126 @@
 @section('title', 'New Order')
 
 @section('content')
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>New Order</h1>
-            <a href="{{ route('transaksi') }}" class="btn btn-secondary">
-                <i class="bi-arrow-left-circle me-2"></i> Back to Transactions
-            </a>
+    <div class="container py-4">
+        <div class="card shadow-sm border-0 rounded-lg mb-4">
+            <div class="card-header bg-white py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold text-primary">
+                        <i class="fas fa-shopping-cart me-2 text-primary"></i>Menu Transaksi Baru
+                    </h5>
+                    <a href="{{ route('transaksi') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-arrow-left me-2"></i>Kembali
+                    </a>
+                </div>
+            </div>
         </div>
 
         <form action="{{ route('transaksi.store') }}" method="POST">
             @csrf
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm border-0 rounded-lg mb-4">
+                        <div class="card-header bg-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 fw-bold text-primary">
+                                    <i class="fas fa-list me-2"></i>Pesan Obat
+                                </h6>
+                                <button type="button" class="add-product-btn btn btn-primary btn-sm">
+                                    <i class="fas fa-plus me-2"></i>Tambah Produk
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table mb-0 products-table">
+                                    <thead class="bg-light text-center">
+                                        <tr>
+                                            <th class="py-3">Produk</th>
+                                            <th class="py-3">Harga</th>
+                                            <th class="py-3" style="width: 120px;">Jumlah</th>
+                                            <th class="py-3">Satuan</th>
+                                            <th class="py-3" style="width: 80px;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="order-items">
+                                        <tr>
+                                            <td class="align-middle text-center">
+                                                <div class="dropdown-container">
+                                                    <select class="form-select product-select dropdown-with-icon"
+                                                        name="obat_id[]" required>
+                                                        <option value="" disabled selected>Pilih Obat</option>
+                                                        @foreach ($obats as $obat)
+                                                            <option value="{{ $obat->id }}"
+                                                                data-harga="{{ $obat->harga }}"
+                                                                data-stok="{{ $obat->stok_sisa }}">
+                                                                {{ $obat->nama }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                                                </div>
+                                            </td>
+                                            <td class="price align-middle text-center">Rp 0</td>
+                                            <td class="align-middle text-center">
+                                                <input type="number" name="jumlah[]"
+                                                    class="form-control quantity text-center" value="1" min="1"
+                                                    required>
+                                            </td>
+                                            <td class="subtotal align-middle text-center">Rp 0</td>
+                                            <td class="align-middle text-center">
+                                                <button type="button" class="btn btn-danger btn-sm remove-btn">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Section: Order Items -->
-            <div class="form-section">
-                <h3>Order Items</h3>
-                <button type="button" class="add-product-btn mb-3 btn btn-success">Add Product</button>
-
-                <table class="table table-bordered products-table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Subtotal</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="order-items">
-                        <tr>
-                            <td>
-                                <div class="dropdown-container">
-                                    <select class="form-control dropdown-with-icon" name="obat_id[]" required>
-                                        <option value="" disabled selected>Select Product</option>
-                                        @foreach ($obats as $obat)
-                                            <option value="{{ $obat->id }}" data-harga="{{ $obat->harga }}"
-                                                data-stok="{{ $obat->stok_sisa }}">{{ $obat->nama }}</option>
-                                        @endforeach
-                                    </select>
-                                    <i class="fas fa-chevron-down dropdown-icon"></i>
-                                </div>
-                            </td>
-                            <td class="price">Rp 0</td>
-                            <td>
-                                <input type="number" name="jumlah[]" class="form-control quantity" value="1"
-                                    min="1" required>
-                            </td>
-                            <td class="subtotal">Rp 0</td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-
-            <!-- Section: Total -->
-            <div class="form-section" style="margin-top: 20px;">
-                <h3>Total</h3>
-                <table class="table total-table">
-                    <tbody>
-                        <tr class="no-border">
-                            <td><strong>Subtotal</strong></td>
-                            <td class="text-end" id="subtotal-amount">Rp 0</td>
-                        </tr>
-                        <tr class="no-border">
-                            <td><strong>PPN (12%)</strong></td>
-                            <td class="text-end" id="ppn-amount">Rp 0</td>
-                        </tr>
-                        <tr class="no-border">
-                            <td><strong>Total</strong></td>
-                            <td class="text-end" id="total-amount">Rp 0</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="action-buttons">
-                <button type="submit" class="btn btn-primary submit-btn">Submit Order</button>
+                <div class="col-lg-4">
+                    <div class="card shadow-sm border-0 rounded-lg">
+                        <div class="card-header bg-white py-3">
+                            <h6 class="mb-0 fw-bold text-primary">
+                                <i class="fas fa-calculator me-2"></i>Hitungan Pembelian
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Subtotal</span>
+                                <span class="fw-bold" id="subtotal-amount">Rp 0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">PPN (12%)</span>
+                                <span class="fw-bold" id="ppn-amount">Rp 0</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="h6 mb-0">Total</span>
+                                <span class="h6 mb-0 text-primary" id="total-amount">Rp 0</span>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-check me-2"></i>Simpan Transaksi
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
-
 @endsection
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module">
         $(document).ready(function() {
-            // Fungsi untuk menghitung stok terpakai
+            // menghitung stok terpakai
             function calculateRemainingStock(ignoreRow = null) {
-                const stokTerpakai = {}; // Menyimpan stok yang sudah dipesan
+                const stokTerpakai = {};
                 $('#order-items tr').each(function() {
-                    if (this === ignoreRow) return; // Abaikan baris yang sedang diubah
+                    if (this === ignoreRow) return;
                     const obatId = $(this).find('select[name="obat_id[]"]').val();
                     const jumlah = parseInt($(this).find('.quantity').val() || 0);
                     if (obatId) {
@@ -104,7 +132,7 @@
                 return stokTerpakai;
             }
 
-            // Fungsi untuk memperbarui total harga
+            // memperbarui total harga
             function updateTotal() {
                 let subtotal = 0;
                 $('#order-items .subtotal').each(function() {
@@ -119,52 +147,54 @@
                 $('#total-amount').text(`Rp ${total.toLocaleString('id-ID')}`);
             }
 
-            // Tambahkan baris produk baru
             $('.add-product-btn').on('click', function() {
-                let newRow = `
-                <tr>
-                    <td>
-                        <div class="dropdown-container">
-                            <select class="form-control dropdown-with-icon" name="obat_id[]" required>
-                                <option value="" disabled selected>Select Product</option>
-                                @foreach ($obats as $obat)
-                                    <option value="{{ $obat->id }}" data-harga="{{ $obat->harga }}" data-stok="{{ $obat->stok_sisa }}">{{ $obat->nama }}</option>
-                                @endforeach
-                            </select>
-                            <i class="fas fa-chevron-down dropdown-icon"></i>
-                        </div>
-                    </td>
-                    <td class="price">Rp 0</td>
-                    <td>
-                        <input type="number" name="jumlah[]" class="form-control quantity" value="1" min="1" required>
-                    </td>
-                    <td class="subtotal">Rp 0</td>
-                    <td>
-                        <button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button>
-                    </td>
-                </tr>`;
+                let newRow = `<tr>
+    <td class="align-middle text-center">
+        <div class="dropdown-container">
+            <select class="form-select product-select dropdown-with-icon" name="obat_id[]" required>
+            <option value="" disabled selected>Pilih Obat</option>
+            @foreach ($obats as $obat)
+                <option value="{{ $obat->id }}"
+                        data-harga="{{ $obat->harga }}"
+                        data-stok="{{ $obat->stok_sisa }}">
+                    {{ $obat->nama }}
+                </option>
+            @endforeach
+        </select>
+        <i class="fas fa-chevron-down dropdown-icon"></i>
+                            </div>
+    </td>
+    <td class="price align-middle text-center">Rp 0</td>
+    <td class="align-middle text-center">
+        <input type="number" name="jumlah[]"
+               class="form-control quantity text-center" value="1" min="1" required>
+    </td>
+    <td class="subtotal align-middle text-center">Rp 0</td>
+    <td class="align-middle text-center">
+        <button type="button" class="btn btn-danger btn-sm remove-btn">
+            <i class="fas fa-trash"></i>
+        </button>
+    </td>
+</tr>`;
                 $('#order-items').append(newRow);
             });
 
-            // Hapus baris produk
             $(document).on('click', '.remove-btn', function() {
                 $(this).closest('tr').remove();
                 updateTotal();
             });
 
-            // Pengecekan stok saat dropdown berubah
+            // cek stok saat dropdown berubah
             $(document).on('change', 'select[name="obat_id[]"]', function() {
                 const row = $(this).closest('tr');
-                const obatId = $(this).val(); // ID obat yang dipilih
-                const stok = parseInt($(this).find('option:selected').data('stok') || 0); // Stok obat
+                const obatId = $(this).val();
+                const stok = parseInt($(this).find('option:selected').data('stok') || 0);
                 const stokTerpakai = calculateRemainingStock(row[
-                0]); // Hitung stok terpakai tanpa baris ini
+                    0]);
 
-                // Tambahkan stok dari baris ini (jika ada)
                 const currentQuantity = parseInt(row.find('.quantity').val() || 0);
                 const totalTerpakai = (stokTerpakai[obatId] || 0) + currentQuantity;
 
-                // Validasi stok
                 if (totalTerpakai > stok) {
                     Swal.fire({
                         icon: 'error',
@@ -172,14 +202,12 @@
                         text: 'Anda sudah memesan semua stok yang tersedia untuk salah satu obat. Tidak bisa menambahkan produk lagi.',
                     });
 
-                    // Reset dropdown ke default
                     $(this).val('');
                     row.find('.price').text('Rp 0');
                     row.find('.quantity').val(1);
                     row.find('.subtotal').text('Rp 0');
                     updateTotal();
                 } else {
-                    // Update harga dan subtotal
                     const price = parseInt($(this).find('option:selected').data('harga') || 0);
                     row.find('.price').text(`Rp ${price.toLocaleString('id-ID')}`);
                     const subtotal = currentQuantity * price;
@@ -188,7 +216,6 @@
                 }
             });
 
-            // Validasi stok saat quantity diubah
             $(document).on('change', '.quantity', function() {
                 const row = $(this).closest('tr');
                 const obatId = row.find('select[name="obat_id[]"]').val();
@@ -197,7 +224,6 @@
                 const quantity = parseInt($(this).val() || 0);
                 const stokTerpakai = calculateRemainingStock(row[0]);
 
-                // Validasi jika stok yang dimasukkan melebihi sisa stok
                 if ((stokTerpakai[obatId] || 0) + quantity > stok) {
                     const maxQuantity = stok - (stokTerpakai[obatId] || 0);
 
@@ -207,11 +233,9 @@
                         text: `Anda hanya bisa memesan sisa stok sebanyak ${maxQuantity}.`,
                     });
 
-                    // Set jumlah ke sisa stok yang tersedia
                     $(this).val(maxQuantity);
                 }
 
-                // Update subtotal
                 const adjustedQuantity = parseInt($(this).val() || 0);
                 const price = parseInt(row.find('select[name="obat_id[]"] option:selected').data('harga') ||
                     0);
@@ -220,7 +244,6 @@
                 updateTotal();
             });
 
-            // Sweet Alert untuk konfirmasi form submission
             $('form').on('submit', function(e) {
                 e.preventDefault();
 
@@ -233,7 +256,7 @@
                     cancelButtonText: 'Batal',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.submit(); // Submit the form jika konfirmasi
+                        this.submit();
                     }
                 });
             });

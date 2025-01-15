@@ -6,20 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::table('obat', function (Blueprint $table) {
-            $table->decimal('harga', 10, 2)->after('stok');  // Menambahkan kolom harga setelah kolom stok
+            $table->decimal('harga', 10, 2)->default(0);
         });
     }
 
     public function down()
     {
         Schema::table('obat', function (Blueprint $table) {
-            $table->dropColumn('harga');  // Menghapus kolom harga jika migrasi di-rollback
+            $table->dropColumn('harga');
         });
     }
+
 };

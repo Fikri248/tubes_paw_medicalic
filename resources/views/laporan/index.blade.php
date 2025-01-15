@@ -9,7 +9,7 @@
                 <h6>Pendapatan Bersih</h6>
                 <div class="d-flex justify-content-between align-items-center">
                     <i class="fas fa-wallet fa-2x"></i>
-                    <h3>Rp {{ number_format($pendapatanBersih ?? 0, 0, ',', '.') }}</h3>
+                    <h3 style="font-size: 24px;">Rp {{ number_format($pendapatanBersih ?? 0, 0, ',', '.') }}</h3>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                 <h6>Obat Terlaris</h6>
                 <div class="d-flex justify-content-between align-items-center">
                     <i class="fas fa-pills fa-2x"></i>
-                    <h3>{{ $obatTerlaris ?? 0 }}</h3>
+                    <h3 style="font-size: 21px;">{{ $obatTerlaris ?? 0 }}</h3>
                 </div>
             </div>
         </div>
@@ -43,7 +43,6 @@
     </div>
 
     <div class="row mb-4">
-        <!-- Laporan Daftar Obat -->
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
@@ -66,7 +65,6 @@
             </div>
         </div>
 
-        <!-- Laporan Transaksi Obat -->
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
@@ -99,9 +97,4 @@
 @endsection
 
 @push('styles')
-    <style>
-        .gap-2 {
-            gap: 0.5rem;
-        }
-    </style>
 @endpush
