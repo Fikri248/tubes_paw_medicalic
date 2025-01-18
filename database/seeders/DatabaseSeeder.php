@@ -12,7 +12,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ObatSeeder::class,
             OrdersSeeder::class,
-            TransaksiSeeder::class
+            TransaksiSeeder::class,
+            UserSeeder::class
         ]);
     }
 }
