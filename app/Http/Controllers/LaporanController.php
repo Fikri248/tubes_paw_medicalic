@@ -13,30 +13,65 @@ use Maatwebsite\Excel\Facades\Excel;
 class LaporanController extends Controller
 {
     public function index()
-    {
-        $subtotalPendapatan = Transaksi::sum('total_harga');
+{
+    $subtotalPendapatan = Transaksi::sum('total_harga');
 
-        $totalPPN = 0.12 * $subtotalPendapatan;
+    $totalPPN = 0.12 * $subtotalPendapatan;
 
-        $pendapatanBersih = $subtotalPendapatan;
+    $pendapatanBersih = $subtotalPendapatan;
 
-        $obatTerlaris = Transaksi::with('obat')
-            ->selectRaw('obat_id, SUM(jumlah) as total_jumlah')
-            ->groupBy('obat_id')
-            ->orderBy('total_jumlah', 'desc')
-            ->first();
+    $obatTerlaris = Transaksi::with('obat')
+        ->selectRaw('obat_id, SUM(jumlah) as total_jumlah')
+        ->groupBy('obat_id')
+        ->orderBy('total_jumlah', 'desc')
+        ->first();
 
-        $obatTerlarisNama = $obatTerlaris->obat->nama ?? 'Tidak ada';
+    $obatTerlarisNama = $obatTerlaris->obat->nama ?? 'Tidak ada';
 
-        $jumlahTransaksi = Transaksi::distinct('order_id')->count('order_id');
+    $jumlahTransaksi = Transaksi::distinct('order_id')->count('order_id');
 
-        return view('laporan.index', [
-            'pendapatanBersih' => $pendapatanBersih,
-            'ppn' => $totalPPN,
-            'obatTerlaris' => $obatTerlarisNama,
-            'jumlahTransaksi' => $jumlahTransaksi,
-        ]);
-    }
+    // Data untuk chart jumlah penjualan obat
+    $chartLabelsPenjualan = Transaksi::join('obat', 'transaksi.obat_id', '=', 'obat.id')
+    ->selectRaw('obat.nama as obat_nama, SUM(transaksi.jumlah) as total_jumlah')
+    ->groupBy('transaksi.obat_id')
+    ->orderBy('total_jumlah', 'desc')
+    ->pluck('obat_nama')
+    ->toArray();
+
+$chartDataPenjualan = Transaksi::join('obat', 'transaksi.obat_id', '=', 'obat.id')
+    ->selectRaw('SUM(transaksi.jumlah) as total_jumlah')
+    ->groupBy('transaksi.obat_id')
+    ->orderBy('total_jumlah', 'desc')
+    ->pluck('total_jumlah')
+    ->toArray();
+
+$chartLabelsPendapatan = Transaksi::join('obat', 'transaksi.obat_id', '=', 'obat.id')
+    ->selectRaw('obat.nama as obat_nama, SUM(transaksi.total_harga) as total_harga')
+    ->groupBy('transaksi.obat_id')
+    ->orderBy('total_harga', 'desc')
+    ->pluck('obat_nama')
+    ->toArray();
+
+$chartDataPendapatan = Transaksi::join('obat', 'transaksi.obat_id', '=', 'obat.id')
+    ->selectRaw('SUM(transaksi.total_harga) as total_harga')
+    ->groupBy('transaksi.obat_id')
+    ->orderBy('total_harga', 'desc')
+    ->pluck('total_harga')
+    ->toArray();
+
+
+    return view('laporan.index', [
+        'pendapatanBersih' => $pendapatanBersih,
+        'ppn' => $totalPPN,
+        'obatTerlaris' => $obatTerlarisNama,
+        'jumlahTransaksi' => $jumlahTransaksi,
+        'chartLabelsPenjualan' => $chartLabelsPenjualan,
+        'chartDataPenjualan' => $chartDataPenjualan,
+        'chartLabelsPendapatan' => $chartLabelsPendapatan,
+        'chartDataPendapatan' => $chartDataPendapatan,
+    ]);
+}
+
 
     public function cetakObatPdf()
     {

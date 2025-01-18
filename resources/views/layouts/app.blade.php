@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Dashboard')</title>
     @vite('resources/sass/app.scss')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/datatable.css') }}">
 </head>
@@ -15,56 +16,87 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2 sidebar p-0 hidden" id="sidebar">
-                <div class="sidebar-header">
-                    <h4 class="typing-text">
-                        <span></span>
-                    </h4>
-                </div>
-                <div class="navigation">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard') }}">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                            </a>
-                        </li>
+            @auth
+                <div class="col-md-2 sidebar p-0 hidden" id="sidebar">
+                    <div class="sidebar-header">
+                        <h4 class="typing-text">
+                            <span></span>
+                        </h4>
+                    </div>
 
-                        <li class="nav-item">
-                            <a class="nav-link d-flex justify-content-between align-items-center" href="#"
-                                onclick="toggleSubmenu(event)">
-                                <div>
-                                    <i class="fas fa-database"></i> Master Data
+
+                    <div class="navigation">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('dashboard') }}">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link d-flex justify-content-between align-items-center" href="#"
+                                    onclick="toggleSubmenu(event)">
+                                    <div>
+                                        <i class="fas fa-database"></i> Master Data
+                                    </div>
+                                    <i class="fas fa-chevron-down"></i>
+                                </a>
+                                <ul class="submenu" id="masterDataSubmenu">
+                                    <li><a href="{{ route('master-data.kategori') }}">
+                                            <i class="fas fa-circle-dot"></i> Data Kategori</a></li>
+                                    <li><a href="{{ route('master-data.obat') }}">
+                                            <i class="fas fa-circle-dot"></i> Data Obat</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('transaksi') }}">
+                                    <i class="fas fa-exchange-alt"></i> Transaksi
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('laporan.index') }}">
+                                    <i class="fas fa-file-alt"></i> Laporan
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="user-profile">
+                            <div class="nav-item profile-toggle" id="profileToggle">
+                                <div class="user-info">
+                                    <div class="avatar">
+                                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                    </div>
+                                    <div class="user-details">
+                                        <div class="user-name">{{ auth()->user()->name }}</div>
+                                        <div class="user-role">Administrator</div>
+                                    </div>
+                                    <i class="fas fa-chevron-down chevron text-white"></i>
                                 </div>
-                                <i class="fas fa-chevron-down"></i>
-                            </a>
-                            <ul class="submenu" id="masterDataSubmenu">
-                                <li><a href="{{ route('master-data.kategori') }}">
-                                        <i class="fas fa-circle-dot"></i> Data Kategori</a></li>
-                                <li><a href="{{ route('master-data.obat') }}">
-                                        <i class="fas fa-circle-dot"></i> Data Obat</a></li>
-                            </ul>
-                        </li>
+                            </div>
+                            <div class="dropdown" id="profileDropdown">
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="logout-btn">
+                                        <div class="logout-content">
+                                            <i class="fas fa-sign-out-alt"></i>
+                                            <span>Logout</span>
+                                        </div>
+                                        <div class="glass-overlay"></div>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('transaksi') }}">
-                                <i class="fas fa-exchange-alt"></i> Transaksi
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('laporan.index') }}">
-                                <i class="fas fa-file-alt"></i> Laporan
-                            </a>
-                        </li>
-                    </ul>
-
-                    <div class="hide-menu-btn">
-                        <button onclick="toggleSidebar()" class="btn btn-dark w-100">
-                            <i class="fas fa-angles-left"></i> Hide Menu
-                        </button>
+                        <div class="hide-menu-btn">
+                            <button onclick="toggleSidebar()" class="btn btn-dark w-100">
+                                <i class="fas fa-angles-left"></i> Hide Menu
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endauth
 
             <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()">
                 <i class="fas fa-bars"></i>
@@ -78,6 +110,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
         //animasi teks berjalan
@@ -177,6 +212,37 @@
                 }
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('sweet_alert'))
+                Swal.fire({
+                    icon: '{{ session('sweet_alert.type') }}',
+                    title: '{{ session('sweet_alert.title') }}',
+                    text: '{{ session('sweet_alert.text') }}',
+                    confirmButtonColor: '#3085d6',
+                });
+            @endif
+        });
+
+        // animasi profil
+        const profileToggle = document.getElementById('profileToggle');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const chevron = document.querySelector('.profile-toggle .chevron');
+
+        if (profileToggle && profileDropdown && chevron) {
+            profileToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('show');
+                chevron.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!profileToggle.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.remove('show');
+                    chevron.classList.remove('active');
+                }
+            });
+        }
     </script>
 
     @vite('resources/js/app.js')

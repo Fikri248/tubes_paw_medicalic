@@ -485,3 +485,154 @@ body {
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
 }
+
+.user-profile {
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-toggle {
+    cursor: pointer;
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.profile-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    font-size: 1rem;
+}
+
+.user-details {
+    flex-grow: 1;
+}
+
+.user-name {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.user-role {
+    color: #9CA3AF;
+    font-size: 0.75rem;
+}
+
+.chevron {
+    position: absolute;
+    right: 0;
+    transition: transform 0.3s ease;
+}
+
+.chevron.active {
+    transform: rotate(180deg);
+}
+
+.dropdown {
+    display: none;
+    padding: 0.75rem 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.dropdown.show {
+    display: block;
+    animation: slideDown 0.3s ease forwards;
+}
+
+.logout-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.9), rgba(185, 28, 28, 0.9));
+    border: none;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(255, 255, 255, 0.05) 100%
+    );
+    pointer-events: none;
+}
+
+.logout-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.85rem 1.2rem;
+    color: white;
+    gap: 0.75rem;
+    z-index: 1;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
+    background: linear-gradient(135deg, rgba(220, 38, 38, 1), rgba(185, 28, 28, 1));
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.logout-btn i {
+    font-size: 1.1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logout-btn span {
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

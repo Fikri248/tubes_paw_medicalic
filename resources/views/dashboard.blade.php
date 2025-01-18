@@ -42,10 +42,81 @@
         </div>
     </div>
 
-    <div class="card">
+    <!-- Card for Chart -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">
+                <i class="fas fa-chart-line me-2"></i>
+                Statistik Daftar Obat
+            </h5>
+            <canvas id="salesChart" style="max-height: 400px;"></canvas>
+        </div>
+    </div>
+
+    <div class="card mt-4">
         <div class="card-body">
             <h5 class="card-title">Selamat Datang di Website Apotek Medicalic</h5>
             <p class="card-text text-muted">Anda adalah anggota kelompok 2 yang memiliki akses penuh terhadap sistem.</p>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Data for Chart.js
+        const labels = @json($chartLabels); // Nama obat
+        const data = @json($chartData); // Stok masing-masing obat
+
+        // Chart.js configuration
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'bar', // Tipe chart
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Jumlah Stok Obat',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 14 // Ukuran font legenda
+                            }
+                        },
+                        onClick: null // Menonaktifkan aksi klik pada legenda
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+@endpush
+
+
